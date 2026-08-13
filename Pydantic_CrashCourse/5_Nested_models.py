@@ -43,3 +43,10 @@ print(Patient1.address.state)
 # Better organization: for related data like address, vitals, insurance
 # Readability Easier: for developers and API consumenrs to understand
 # Reuseability : Use vitals in multiple models( eg: patient, Medicalrecord)
+
+# To convert the pydantic model into dictionary use the model_dump()
+
+temp = Patient1.model_dump()
+print(temp)
+# {'name': 'Suresh', 'age': 89, 'address': {'city': 'Bangalore', 'state': 'Karnataka', 'pin': 232234
+print(type(temp))
