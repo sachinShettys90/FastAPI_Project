@@ -17,7 +17,8 @@ class PatientDetails(BaseModel):
     allergies: List[str]
     contact_details: Dict[str, str]
 
-    @field_validator('email')                      # decorator
+    # decorator field_validator for email validation(checks the domain given in the list , if any eror it will throw value error ----not a valid domain)
+    @field_validator('email')
     @classmethod                                 # field_validator is a class method
     def email_validator(cls, value):
         valid_domain = ['hdfc.com', 'icic.com']
@@ -30,6 +31,12 @@ class PatientDetails(BaseModel):
 
         return value
 
+     # field_validator for name validation (converting into upper case)
+    @field_validator('name')
+    @classmethod
+    def Name_transformation(cls, value):
+        return value.upper()
+
 
 def update_database(patient: PatientDetails):
     print(patient.name)
@@ -41,6 +48,6 @@ def update_database(patient: PatientDetails):
 PatientInfo = {'name': "Suresh", 'email': 'abc@hdfc.com', 'weight': 78, 'age': 27,
                'married': True, 'allergies': ["pollen"], 'contact_details': {'mobile': '7019228968'}}
 
-P1 = PatientDetails(**PatientInfo)
+P1 = PatientDetails(**PatientInfo)  # apply pydantic to the PatientInfo
 
-update_database(P1)
+update_database(P1)  # Add the details to the database
