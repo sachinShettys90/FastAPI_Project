@@ -45,9 +45,10 @@ def update_database(patient: PatientDetails):
     print("updated data")
 
 
-PatientInfo = {'name': "Suresh", 'email': 'abc@hdfc.com', 'weight': 78, 'age': 27,
+PatientInfo = {'name': "Suresh", 'email': 'abc@hdfc.com', 'weight': '78', 'age': '27',
                'married': True, 'allergies': ["pollen"], 'contact_details': {'mobile': '7019228968'}}
 
-P1 = PatientDetails(**PatientInfo)  # apply pydantic to the PatientInfo
+# apply pydantic to the PatientInfo---Validation will happen after Pydantic
+P1 = PatientDetails(**PatientInfo)
 
 update_database(P1)  # Add the details to the database
