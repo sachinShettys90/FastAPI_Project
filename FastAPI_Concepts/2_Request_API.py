@@ -11,10 +11,10 @@ app = FastAPI()  # defining the object
 
 
 class Patient(BaseModel):
-    id: Annotated[str, Field(..., description="Patient's id", examples="P001")]
+    id: Annotated[str, Field(..., description="Patient's id", example="P001")]
     name: Annotated[str, Field(..., description="Patient's name")]
     city: Annotated[str, Field(..., description="Patient's city")]
-    age: Annotated[str, Field(..., description="Patient's age", gt=0, lt=110)]
+    age: Annotated[int, Field(..., description="Patient's age", gt=0, lt=110)]
     gender: Annotated[Literal['male', 'female'],
                       Field(..., description="Patient's gender")]
     height: Annotated[float, Field(..., description="Patient's height")]
