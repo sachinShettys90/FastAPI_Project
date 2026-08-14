@@ -48,5 +48,15 @@
         "weight": 75,
         "bmi": 31.22,
         "verdict": "Obese"
+    },
+    "P007": {
+        "name": "Rajesh",
+        "city": "Bangalore",
+        "age": 17,
+        "gender": "male",
+        "height": 1.7,
+        "weight": 85.0,
+        "bmi": 29.41,
+        "verdict": "normal"
     }
 }
