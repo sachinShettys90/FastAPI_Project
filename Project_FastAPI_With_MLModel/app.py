@@ -1,13 +1,26 @@
+'''
+Run this app.py using this command  
+uvicorn Project_FastAPI_With_MLModel.app.py:app --reload
+'''
+
 from fastapi import FastAPI, Path, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, computed_field
 from typing import Annotated, Literal, Dict, List, Optional
 import pickle
 import pandas as pd
 
+
 # import the ml model
 
-with open('model.pkl', 'rb') as f:
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'model.pkl')
+
+with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
+
 
 app = FastAPI()
 
@@ -26,7 +39,7 @@ tier_2_cities = [
 
 
 # build pydantic model to validate the incoming data
-class UserInput(BaseModel):
+class UserInput_PydanticModel(BaseModel):
     age: Annotated[int, Field(..., gt=0, lt=120,
                               description="Age of the user")]
     weight: Annotated[float,
@@ -37,7 +50,8 @@ class UserInput(BaseModel):
                           Field(..., gt=0, description="income_lpa of the user")]
     smoker: Annotated[bool, Field(..., description="User is Smoker or not")]
     city: Annotated[str, Field(..., description="user's city")]
-    occupation: Annotated[int,
+    occupation: Annotated[Literal['retired', 'unemployed', 'business_owner', 'government_job',
+                                  'private_job', 'freelancer', 'student'],
                           Field(..., description="Occupation of the user")]
 
     @computed_field
@@ -75,3 +89,19 @@ class UserInput(BaseModel):
             return 2
         else:
             return 3
+
+
+@app.post('/predict')
+def predict_premium(data: UserInput_PydanticModel):
+    input_df = pd.DataFrame([{
+        'bmi': data.bmi,
+        'age_group': data.age_group,
+        'lifestyle_risk': data.lifestyle_risk,
+        'city_tier': data.city_tier,
+        'income_lpa': data.income_lpa,
+        'occupation': data.occupation
+    }])
+
+    prediction = model.predict(input_df)[0]
+
+    return JSONResponse(status_code=200, content={'prediction_category': prediction})
